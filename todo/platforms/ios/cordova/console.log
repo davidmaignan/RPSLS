@@ -1,0 +1,25 @@
+2014-07-21 10:14:28.789 todo[2776:70b] Multi-tasking -> Device: YES, App: YES
+2014-07-21 10:14:28.824 todo[2776:70b] Unlimited access to network resources
+2014-07-21 10:14:29.120 todo[2776:70b] [CDVTimer][keyboard] 0.107050ms
+2014-07-21 10:14:29.121 todo[2776:70b] CDVPlugin class CDVStatusBar (pluginName: statusbar) does not exist.
+2014-07-21 10:14:29.121 todo[2776:70b] [CDVTimer][statusbar] 0.469029ms
+2014-07-21 10:14:29.122 todo[2776:70b] [CDVTimer][TotalPluginStartup] 1.560986ms
+2014-07-21 10:14:29.393 todo[2776:70b] Resetting plugins due to page load.
+2014-07-21 10:14:29.980 todo[2776:70b] Finished load of: file:///Users/david/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/8548B689-FDBB-4E7D-855C-38688C156004/todo.app/www/index.html
+2014-07-21 11:23:53.319 todo[4111:70b] Multi-tasking -> Device: YES, App: YES
+2014-07-21 11:23:53.351 todo[4111:70b] Unlimited access to network resources
+2014-07-21 11:23:53.550 todo[4111:70b] [CDVTimer][keyboard] 0.115037ms
+2014-07-21 11:23:53.551 todo[4111:70b] CDVPlugin class CDVStatusBar (pluginName: statusbar) does not exist.
+2014-07-21 11:23:53.551 todo[4111:70b] [CDVTimer][statusbar] 0.508964ms
+2014-07-21 11:23:53.552 todo[4111:70b] [CDVTimer][TotalPluginStartup] 1.715004ms
+2014-07-21 11:23:53.929 todo[4111:70b] Resetting plugins due to page load.
+2014-07-21 11:23:54.914 todo[4111:70b] Finished load of: file:///Users/david/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/8548B689-FDBB-4E7D-855C-38688C156004/todo.app/www/index.html
+2014-07-21 11:23:55.057 todo[4111:70b] THREAD WARNING: ['Device'] took '17.147949' ms. Plugin should use a background thread.
+2014-07-21 11:27:14.875 todo[4612:70b] Multi-tasking -> Device: YES, App: YES
+2014-07-21 11:27:14.892 todo[4612:70b] Unlimited access to network resources
+2014-07-21 11:27:14.916 todo[4612:70b] [CDVTimer][keyboard] 0.099003ms
+2014-07-21 11:27:14.917 todo[4612:70b] CDVPlugin class CDVStatusBar (pluginName: statusbar) does not exist.
+2014-07-21 11:27:14.917 todo[4612:70b] [CDVTimer][statusbar] 0.482023ms
+2014-07-21 11:27:14.918 todo[4612:70b] [CDVTimer][TotalPluginStartup] 1.655996ms
+2014-07-21 11:27:15.109 todo[4612:70b] Resetting plugins due to page load.
+2014-07-21 11:27:15.742 todo[4612:70b] Finished load of: file:///Users/david/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/8548B689-FDBB-4E7D-855C-38688C156004/todo.app/www/index.html

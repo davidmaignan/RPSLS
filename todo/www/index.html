@@ -36,15 +36,18 @@
         <!-- Center content -->
         <ion-side-menu-content>
             <ion-header-bar class="bar-dark">
-                <h1 class="title">Todo</h1>
+                <button class="button button-icon" ng-click="toggleProjects()">
+                    <i class="icon ion-navicon"></i>
+                </button>
+                <h1 class="title">{{activeProject.title}}</h1>
+                <!-- New Task button-->
                 <button class="button button-icon" ng-click="newTask()">
                     <i class="icon ion-compose"></i>
                 </button>
             </ion-header-bar>
-            <ion-content>
-                <!-- our list and list items -->
+            <ion-content scroll="false">
                 <ion-list>
-                    <ion-item ng-repeat="task in tasks">
+                    <ion-item ng-repeat="task in activeProject.tasks">
                         {{task.title}}
                     </ion-item>
                 </ion-list>
@@ -55,9 +58,17 @@
         <ion-side-menu side="left">
             <ion-header-bar class="bar-dark">
                 <h1 class="title">Projects</h1>
+                <button class="button button-icon ion-plus" ng-click="newProject()">
+                </button>
             </ion-header-bar>
+            <ion-content scroll="false">
+                <ion-list>
+                    <ion-item ng-repeat="project in projects" ng-click="selectProject(project, $index)" ng-class="{active: activeProject == project}">
+                        {{project.title}}
+                    </ion-item>
+                </ion-list>
+            </ion-content>
         </ion-side-menu>
-
     </ion-side-menus>
 
     <script id="new-task.html" type="text/ng-template">
@@ -72,7 +83,6 @@
 
             <!-- Modal content area -->
             <ion-content>
-
                 <form ng-submit="createTask(task)">
                     <div class="list">
                         <label class="item item-input">
@@ -83,11 +93,8 @@
                         <button type="submit" class="button button-block button-positive">Create Task</button>
                     </div>
                 </form>
-
             </ion-content>
-
         </div>
-
     </script>
   </body>
 </html>

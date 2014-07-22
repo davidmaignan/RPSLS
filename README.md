@@ -23,3 +23,20 @@ Test it out
 $ ionic build ios
 $ ionic emulate ios
 ```
+
+Express
+=======
+
+Install node and npm
+
+Install / update dependancies
+```CLI
+$ npm install --save
+```
+
+Run
+```CLI
+$ node app.js
+```
+
+

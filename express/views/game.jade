@@ -1,0 +1,37 @@
+doctype html
+html(lang='en')
+    head
+        title Game
+        link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+        link(rel='stylesheet', href='/stylesheets/bootstrap-theme.min.css')
+
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+        script(src="/javascripts/game.js")
+        script(src="/socket.io/socket.io.js")
+    body
+    div(class='container-fluid')
+        div(class='row')
+            div(class='col-md-6')
+                h1 Game homepage
+                form(method='post', action='/signup')
+                label(class="radio-inline")
+                    input(type='radio', name='choice', value='rock')
+                    | Rock
+                label(class="radio-inline")
+                    input(type='radio', name='choice', value='paper')
+                    | Paper
+                label(class="radio-inline")
+                    input(type='radio', name='choice', value='scisor')
+                    | Scisor
+                label(class="radio-inline")
+                    input(type='radio', name='choice', value='lizard')
+                    | Lizard
+                label(class="radio-inline")
+                    input(type='radio', name='choice', value='spoke')
+                    | Spoke
+                hr
+                input(type='submit', value='submit', id='submit', class='btn btn-primary')
+            #result(class='col-md-6')
+                h1 Result

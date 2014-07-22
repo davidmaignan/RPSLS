@@ -1,0 +1,17 @@
+doctype html
+html
+    head
+        title Chat
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+        script(src="script.js")
+        script(src="/socket.io/socket.io.js")
+    body
+        div(style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;")
+            b Users
+            #users
+
+        div(style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;")
+        #conversation
+        .controls
+            input.field(style='width:350px;', id='data')
+            input.send(type='button', value='send', id='datasend')

@@ -3,3 +3,16 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  #container
+    div(class="jumbotron text-center")
+        h1
+            span(class="fa fa-lock")
+        | Authentification
+        p Login or Register with:
+        a(href="/login", class="btn btn-default")
+            span(class="fa fa-user")
+            | Local Login
+        a(href="/login", class="btn btn-default")
+            span(class="fa fa-user")
+            | Local Signup
+

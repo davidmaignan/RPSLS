@@ -7,7 +7,7 @@ var express    = require('express'),
 	routes     = require('./routes'),
 	user       = require('./routes/user'),
 	chat       = require('./routes/chat'),
-	session    = require('./routes/session'),
+	//session    = require('./routes/session'),
 	cookie     = require('./routes/cookie'),
     game       = require('./routes/game'),
 	http       = require('http'),
@@ -17,6 +17,18 @@ var express    = require('express'),
 	db         = monk('localhost:27017/nodetest1'),
 	app        = express(),
 	reload     = require('reload');
+
+var passport     = require('passport');
+var flash        = require('connect-flash');
+var morgan       = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser   = require('body-parser');
+var session      = require('express-session');
+
+app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(bodyParser()); // get information from html forms
+
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -49,14 +61,24 @@ app.get('/', routes.index);
 app.get('/helloworld', auth, routes.helloworld);
 
 //Routes session
-app.get('/session/index', session.index(db));
-app.get('/session/show', session.show(db));
+//app.get('/session/index', session.index(db));
+//app.get('/session/show', session.show(db));
 
 //Routes user
 app.get('/users', user.list);
 app.get('/user/list', user.userlist(db));
 app.get('/user/new', user.newuser);
 app.post('/user/add', user.adduser(db));
+
+//Passport
+// required for passport
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+// routes ======================================================================
+require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 
 

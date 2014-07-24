@@ -18,9 +18,9 @@ exports.index = function(io){
             socket.emit('updategame', 'SERVER', 'you are ready to play');
         });
 
-//        socket.on('sendchat', function (data) {
-//            io.sockets.emit('updatechat', socket.username, data);
-//        });
+        socket.on('playerMove', function (data) {
+            io.sockets.emit('updategame', socket.username, data);
+        });
     });
 
     return function(req, res){

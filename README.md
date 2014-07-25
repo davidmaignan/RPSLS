@@ -39,4 +39,19 @@ Run
 $ node app.js
 ```
 
+Install / Run mongodb
+```CLI
+$ mongod --dbpath /path/to/application/data
+```
+
+```CLI
+$ mongo
+```
+
+Create database
+```CLI
+$ use databaseName
+```
+
+
 

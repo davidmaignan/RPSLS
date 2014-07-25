@@ -1,0 +1,19 @@
+extends layout
+block content
+    h1= title
+    p Welcome to #{title}
+    #container
+        div(class="page-header text-center")
+            h1
+                span(class="fa fa-anchor")
+                | Profile Page
+            a(href="/logout", class="btn btn-default btn-sm") Logout
+        div(class="row")
+            div(class="col-sm-6")
+                div(class="well")
+                    h3
+                        span(class="fa fa-user")
+                    | Local
+                    ul
+                        li id:  #{user.id}
+                        li email: #{user.local.email}

@@ -17,3 +17,13 @@ block content
                     ul
                         li id:  #{user.id}
                         li email: #{user.local.email}
+            div(class="col-sm-6")
+                div(class="well")
+                    h3
+                        span(class="fa fa-user")
+                    | Local
+                    ul
+                        li id:  #{user.facebook.id}
+                        li token: #{user.facebook.token}
+                        li email: #{user.facebook.email}
+                        li name: #{user.facebook.name}

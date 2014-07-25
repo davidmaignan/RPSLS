@@ -4,11 +4,11 @@
  */
 
 exports.index = function(req, res){
-  res.render('index', { title: 'IChallengeU' });
+  res.render('index');
 };
 
 exports.helloworld = function(req, res) {
-	res.render('helloworld', {
-		'title': "Hello world",
-	});
+    res.render('helloworld', {
+        'title': "Hello world"
+    });
 };

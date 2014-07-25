@@ -41,7 +41,6 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 
-
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -68,7 +67,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-//Routes 
+//Routes
 app.get('/', routes.index);
 app.get('/helloworld', auth, routes.helloworld);
 

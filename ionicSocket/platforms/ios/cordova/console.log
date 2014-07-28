@@ -1,0 +1,20 @@
+2014-07-26 11:40:20.509 ionicSocket[1966:70b] Multi-tasking -> Device: YES, App: YES
+2014-07-26 11:40:20.539 ionicSocket[1966:70b] Unlimited access to network resources
+2014-07-26 11:40:20.875 ionicSocket[1966:70b] [CDVTimer][keyboard] 1.219988ms
+2014-07-26 11:40:20.877 ionicSocket[1966:70b] CDVPlugin class CDVStatusBar (pluginName: statusbar) does not exist.
+2014-07-26 11:40:20.879 ionicSocket[1966:70b] [CDVTimer][statusbar] 1.823008ms
+2014-07-26 11:40:20.879 ionicSocket[1966:70b] [CDVTimer][TotalPluginStartup] 5.195022ms
+2014-07-26 11:40:21.130 ionicSocket[1966:70b] Resetting plugins due to page load.
+2014-07-26 11:40:21.701 ionicSocket[1966:70b] Finished load of: file:///Users/david/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/2291A9AC-A078-43B9-BD54-71F0982395E1/ionicSocket.app/www/index.html#/login
+2014-07-26 11:40:27.823 ionicSocket[1966:70b] sadfasdf dasfasdf
+2014-07-27 09:24:59.080 ionicSocket[1014:70b] Multi-tasking -> Device: YES, App: YES
+2014-07-27 09:24:59.113 ionicSocket[1014:70b] Unlimited access to network resources
+2014-07-27 09:24:59.343 ionicSocket[1014:70b] [CDVTimer][keyboard] 0.114977ms
+2014-07-27 09:24:59.344 ionicSocket[1014:70b] CDVPlugin class CDVStatusBar (pluginName: statusbar) does not exist.
+2014-07-27 09:24:59.344 ionicSocket[1014:70b] [CDVTimer][statusbar] 0.576019ms
+2014-07-27 09:24:59.345 ionicSocket[1014:70b] [CDVTimer][TotalPluginStartup] 2.287984ms
+2014-07-27 09:24:59.600 ionicSocket[1014:70b] Resetting plugins due to page load.
+2014-07-27 09:25:00.068 ionicSocket[1014:70b] Finished load of: file:///Users/david/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/2291A9AC-A078-43B9-BD54-71F0982395E1/ionicSocket.app/www/index.html#/login
+2014-07-27 09:25:01.755 ionicSocket[1014:70b]  
+2014-07-27 09:25:01.779 ionicSocket[1014:70b] app page
+2014-07-27 09:25:01.779 ionicSocket[1014:70b] app page

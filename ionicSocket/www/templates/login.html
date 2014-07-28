@@ -1,0 +1,16 @@
+<ion-view title="Login">
+    <div class="list list-inset">
+        <label class="item item-input">
+            <input type="text" placeholder="First Name" ng-model="user.name">
+        </label>
+        <label class="item item-input">
+            <input type="text" placeholder="Last Name" ng-model="user.password">
+        </label>
+
+        <button class="button button-block button-positive" ng-click="login(user)">Login</button>
+    </div>
+    <div class="list list-inset">
+        <button class="button button-block button-positive" ng-click="facebookLogin()">Facebook login</button>
+    </div>
+</ion-view>
+

@@ -1,4 +1,4 @@
-RPCLS
+RPSLS
 =====
 
 Install Cordova, make sure you have [Node.js](http://nodejs.org/) installed, then run

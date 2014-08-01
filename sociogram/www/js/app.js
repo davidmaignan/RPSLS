@@ -2,7 +2,7 @@ angular.module('sociogram', ['ionic', 'openfb', 'sociogram.controllers'])
 
     .run(function ($rootScope, $state, $ionicPlatform, $window, OpenFB) {
 
-        OpenFB.init('134266139947162');
+        OpenFB.init('136820693014991');
 
         $ionicPlatform.ready(function () {
             if (window.StatusBar) {
@@ -106,6 +106,24 @@ angular.module('sociogram', ['ionic', 'openfb', 'sociogram.controllers'])
                     'menuContent': {
                         templateUrl: "templates/feed.html",
                         controller: "FeedCtrl"
+                    }
+                }
+            })
+            .state('app.leaderboard', {
+                url: "/leaderboard",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/leaderboard.html",
+                        controller: "LeaderboardCtrl"
+                    }
+                }
+            })
+            .state('app.lobby', {
+                url: "/lobby",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/lobby.html",
+                        controller: "LobbyCtrl"
                     }
                 }
             });

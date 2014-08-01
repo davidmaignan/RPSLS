@@ -1,5 +1,10 @@
 angular.module('sociogram.controllers', [])
 
+    .constant('$ionicLoadingConfig', {
+        template: 'Default Loading Template...'
+    })
+
+
     .controller('AppCtrl', function ($scope, $state, OpenFB) {
 
         $scope.logout = function () {
@@ -80,6 +85,32 @@ angular.module('sociogram.controllers', [])
             .error(function(data) {
                 alert(data.error.message);
             });
+    })
+
+    .controller('LeaderboardCtrl', function ($scope, $stateParams) {
+        $scope.players = [
+            { name: 'John Doe', rank: 1, total: 23, win: 16, lose: 7 },
+            { name: 'Patrick Smith', rank: 2, total: 33, win: 16, lose: 7 },
+            { name: 'David Maignan', rank: 3, total: 45, win: 16, lose: 7 },
+            { name: 'Celine Maignan', rank: 4, total: 56, win: 16, lose: 7 },
+            { name: 'John Doe', rank: 1, total: 23, win: 16, lose: 7 },
+            { name: 'Patrick Smith', rank: 2, total: 33, win: 16, lose: 7 },
+            { name: 'David Maignan', rank: 3, total: 45, win: 16, lose: 7 },
+            { name: 'Celine Maignan', rank: 4, total: 56, win: 16, lose: 7 },
+        ];
+    })
+
+    .controller('LobbyCtrl', function ($scope, $stateParams, $ionicLoading) {
+        $scope.show = function() {
+            $scope.loading = $ionicLoading.show({
+                content: 'Loading players'
+            });
+        };
+        $scope.hide = function(){
+            $scope.loading.hide();
+        };
+
+        $scope.show();
     })
 
     .controller('FeedCtrl', function ($scope, $stateParams, OpenFB, $ionicLoading) {

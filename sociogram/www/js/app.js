@@ -126,6 +126,15 @@ angular.module('sociogram', ['ionic', 'openfb', 'sociogram.controllers'])
                         controller: "LobbyCtrl"
                     }
                 }
+            })
+            .state('app.match', {
+                url: "/match",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/match.html",
+                        controller: "MatchCtrl"
+                    }
+                }
             });
 
         // fallback route

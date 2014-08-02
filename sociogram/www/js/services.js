@@ -25,3 +25,18 @@ angular.module('services', [])
             }
         };
     })
+
+angular.module('Player.services', []).
+    factory('playerAPIService', function($http) {
+
+        var playerAPI = {};
+
+        playerAPI.getList = function() {
+            return $http({
+                method: 'GET',
+                url: 'http://192.168.0.17:3000/api/players'
+            });
+        }
+
+        return playerAPI;
+    });

@@ -11,3 +11,39 @@
     margin-top: 0;
     margin-bottom: 4px;
 }
+
+.menu-left .icon{
+    font-size: 32px;
+    margin-right: 20px;
+}
+
+.trophy-lobby{
+    width: 28px;
+    height: 28px;
+}
+
+h2.lobby-name{
+    font-size: 22px;
+}
+
+#lobby .col{
+    background-color: ;
+    border: 0px solid red;
+}
+
+.pic{
+    border-radius:25px;"
+}
+
+#lobby .join{
+    border-radius: 160px;
+    align-content: center;
+    padding-top: 20px;
+    border: 1px solid dodgerblue;
+    display: block;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    background-color: lightskyblue;
+    color: white;
+}

@@ -11,6 +11,10 @@
                 on-refresh="doRefresh()">
         </ion-refresher>
 
+        <button class="button button-icon" ng-click="newTask()">
+            <i class="icon ion-compose"></i>
+        </button>
+
         <div ng-repeat="item in items" class="list card">
             <div class="item item-avatar">
                 <img src="https://graph.facebook.com/{{ item.from.id }}/picture"/>

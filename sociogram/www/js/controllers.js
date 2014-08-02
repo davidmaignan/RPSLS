@@ -1,9 +1,8 @@
-angular.module('sociogram.controllers', [])
+angular.module('sociogram.controllers', ['services'])
 
     .constant('$ionicLoadingConfig', {
         template: 'Default Loading Template...'
     })
-
 
     .controller('AppCtrl', function ($scope, $state, OpenFB) {
 
@@ -21,7 +20,6 @@ angular.module('sociogram.controllers', [])
                     alert('Revoke permissions failed');
                 });
         };
-
     })
 
     .controller('LoginCtrl', function ($scope, $location, OpenFB) {
@@ -36,7 +34,6 @@ angular.module('sociogram.controllers', [])
                     alert('OpenFB login failed');
                 });
         };
-
     })
 
     .controller('ShareCtrl', function ($scope, OpenFB) {
@@ -52,7 +49,6 @@ angular.module('sociogram.controllers', [])
                     alert(data.error.message);
                 });
         };
-
     })
 
     .controller('ProfileCtrl', function ($scope, OpenFB) {
@@ -113,34 +109,43 @@ angular.module('sociogram.controllers', [])
         $scope.show();
     })
 
-    .controller('FeedCtrl', function ($scope, $stateParams, OpenFB, $ionicLoading) {
+    .controller('FeedCtrl', function ($scope, $stateParams, socket, OpenFB, $ionicLoading) {
 
-        $scope.show = function() {
-            $scope.loading = $ionicLoading.show({
-                content: 'Loading feed...'
-            });
-        };
-        $scope.hide = function(){
-            $scope.loading.hide();
+        // Open our new task modal
+        $scope.newTask = function() {
+            socket.emit('message:send', { message: 'test message', name: "david", channel: "channel 1" });
         };
 
-        function loadFeed() {
-            $scope.show();
-            OpenFB.get('/' + $stateParams.personId + '/home', {limit: 30})
-                .success(function (result) {
-                    $scope.hide();
-                    $scope.items = result.data;
-                    // Used with pull-to-refresh
-                    $scope.$broadcast('scroll.refreshComplete');
-                })
-                .error(function(data) {
-                    $scope.hide();
-                    alert(data.error.message);
-                });
-        }
+        $scope.emitMessage = function()
+        {
+            socket.emit('message:send', { message: 'test message', name: "david", channel: "channel 1" });
+        };
 
-        $scope.doRefresh = loadFeed;
-
-        loadFeed();
-
+//        $scope.show = function() {
+//            $scope.loading = $ionicLoading.show({
+//                content: 'Loading feed...'
+//            });
+//        };
+//        $scope.hide = function(){
+//            $scope.loading.hide();
+//        };
+//
+//        function loadFeed() {
+//            $scope.show();
+//            OpenFB.get('/' + $stateParams.personId + '/home', {limit: 30})
+//                .success(function (result) {
+//                    $scope.hide();
+//                    $scope.items = result.data;
+//                    // Used with pull-to-refresh
+//                    $scope.$broadcast('scroll.refreshComplete');
+//                })
+//                .error(function(data) {
+//                    $scope.hide();
+//                    alert(data.error.message);
+//                });
+//        }
+//
+//        $scope.doRefresh = loadFeed;
+//
+//        loadFeed();
     });

@@ -123,4 +123,4 @@
     var spoke = new icon("spoke");
     spoke.draw(borderSpoke, detailsSpoke);
 
-})()
+})();

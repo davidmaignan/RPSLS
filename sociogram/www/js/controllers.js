@@ -1,4 +1,4 @@
-angular.module('sociogram.controllers', ['services', 'Player.services'])
+angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.services'])
 
     .controller('AppCtrl', function ($scope, $state, OpenFB) {
 
@@ -122,10 +122,18 @@ angular.module('sociogram.controllers', ['services', 'Player.services'])
         loadPlayer();
     })
 
+    .controller('GameCtrl', function ($scope, $stateParams, $ionicLoading) {
 
-    .controller('MatchCtrl', function ($scope, $stateParams, $ionicLoading) {
 
+    })
 
+    .controller('MatchCtrl', function ($scope, $stateParams, iconService, $ionicLoading) {
+
+        iconService.draw("rock");
+        iconService.draw("paper");
+        iconService.draw("scisor");
+        iconService.draw("lizard");
+        iconService.draw("spoke");
     })
 
     .controller('FeedCtrl', function ($scope, $stateParams, socket, OpenFB, $ionicLoading) {

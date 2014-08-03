@@ -18,6 +18,36 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         };
     })
 
+    .controller('InvitationCtrl', function ($scope, $state, $window) {
+
+        $scope.invitationSent = 'false';
+
+        $scope.invitationValues = {};
+
+        $scope.isSent = function(bool) {
+            return bool === $scope.invitationSent;
+        };
+
+        // Called when the form is submitted
+        $scope.sendInvitation = function() {
+
+            $scope.invitationValues = resolveForm(this);
+            $scope.invitationSent   = 'true';
+
+            $window.location.href = '#/app/match';
+        };
+
+        function resolveForm(form)
+        {
+            var values = {};
+
+            values.mission = (form.mission === 'humiliate')? 'humiliate': 'fun';
+            values.publicly = (form.publicly === false) ? 'false': 'true';
+
+            return values;
+        }
+    })
+
     .controller('LoginCtrl', function ($scope, $location, OpenFB) {
 
         $scope.facebookLogin = function () {
@@ -69,16 +99,6 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
             });
     })
 
-    .controller('MutualFriendsCtrl', function ($scope, $stateParams, OpenFB) {
-        OpenFB.get('/' + $stateParams.personId + '/mutualfriends', {limit: 50})
-            .success(function (result) {
-                $scope.friends = result.data;
-            })
-            .error(function(data) {
-                alert(data.error.message);
-            });
-    })
-
     .controller('LeaderboardCtrl', function ($scope, $stateParams) {
         $scope.players = [
             { name: 'John Doe', rank: 1, total: 23, win: 16, lose: 7 },
@@ -122,57 +142,132 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         loadPlayer();
     })
 
-    .controller('GameCtrl', function ($scope, $stateParams, $ionicLoading) {
+    .controller('HandCtrl', function ($scope, $stateParams, iconService, socket, $interval) {
+        iconService.drawMyChoice($stateParams.playerChoice);
 
+        iconService.drawFont('opponentChoice', '?');
 
+        socket.emit('player:move', { playerMove: $stateParams.playerChoice, channel: "channel 1" });
+
+        $scope.timer = 3;
+
+        stop = $interval(function() {
+
+            iconService.drawFont('opponentChoice', $scope.timer);
+            console.log("counter");
+            $scope.timer --;
+            if($scope.timer === -1) {
+
+                iconService.drawOpponentChoice('lizard');
+            }
+        }, 1000, 4);
+
+        socket.on('opponent:move', function (response) {
+            console.log(response);
+
+        });
     })
 
     .controller('MatchCtrl', function ($scope, $stateParams, iconService, $ionicLoading) {
 
-        iconService.draw("rock");
-        iconService.draw("paper");
-        iconService.draw("scisor");
-        iconService.draw("lizard");
-        iconService.draw("spoke");
+        iconService.drawIcon("rock");
+        iconService.drawIcon("paper");
+        iconService.drawIcon("scissor");
+        iconService.drawIcon("lizard");
+        iconService.drawIcon("spock");
     })
 
-    .controller('FeedCtrl', function ($scope, $stateParams, socket, OpenFB, $ionicLoading) {
+    .controller('FeedCtrl', function ($scope, $stateParams, socket, OpenFB, $ionicLoading, $ionicModal,  $ionicPopup, $window) {
 
-        // Open our new task modal
-        $scope.newTask = function() {
-            socket.emit('message:send', { message: 'test message', name: "david", channel: "channel 1" });
-        };
+//        // Open our new task modal
+//        $scope.newTask = function() {
+//            socket.emit('message:send', { message: 'test message', name: "david", channel: "channel 1" });
+//        };
+//
+//        $scope.emitMessage = function()
+//        {
+//            socket.emit('message:send', { message: 'test message', name: "david", channel: "channel 1" });
+//        };
+//
+//        socket.on('invitation:send', function (username, data) {
+//            console.log(data);
+//            $scope.invitationModal.show();
+//        });
+//
+//        //socket.emit('message:send', { message: 'test message', name: "david", channel: "channel 1" });
+//
+//        $scope.show = function() {
+//            $scope.loading = $ionicLoading.show({
+//                content: 'Loading feed...'
+//            });
+//        };
+//        $scope.hide = function(){
+//            $ionicLoading.hide();
+//        };
+//
+//        function loadFeed() {
+//            $scope.show();
+//            OpenFB.get('/' + $stateParams.personId + '/home', {limit: 30})
+//                .success(function (result) {
+//                    $scope.hide();
+//                    $scope.items = result.data;
+//                    // Used with pull-to-refresh
+//                    $scope.$broadcast('scroll.refreshComplete');
+//                })
+//                .error(function(data) {
+//                    $scope.hide();
+//                    alert(data.error.message);
+//                });
+//        }
+//
+//        $scope.doRefresh = loadFeed;
+//
+//        //loadFeed();
+//
+//        // Create and load the Modal
+//        $ionicModal.fromTemplateUrl('new-task.html', function(modal) {
+//            $scope.invitationModal = modal;
+//        }, {
+//            scope: $scope,
+//            animation: 'slide-in-up'
+//        });
 
-        $scope.emitMessage = function()
-        {
-            socket.emit('message:send', { message: 'test message', name: "david", channel: "channel 1" });
-        };
+        socket.on('invitation:send', function (username, data) {
+            console.log(data);
+            $scope.showInvitation();
 
-        $scope.show = function() {
-            $scope.loading = $ionicLoading.show({
-                content: 'Loading feed...'
+        });
+
+        // A invitation dialog
+        $scope.showInvitation = function() {
+            var confirmPopup = $ionicPopup.confirm({
+                buttons: [
+                    { text: 'Reject',
+                        onTap: function(e) {
+                            return false;
+                        }
+                    },
+                    {
+                        text: '<b>Accept</b>',
+                        type: 'button-positive',
+                        onTap: function(e) {
+                            return true;
+                        }
+                    }
+                ],
+                title:    'A challenge was sent to you',
+                template: 'The mission is humiliation in public'
+            });
+            confirmPopup.then(function(res) {
+
+                console.log(res);
+
+                if(res) {
+                    $window.location.href = '#/app/match';
+                    socket.emit('invitation:accepted', { playerId: "12345", channel: "channel 1" });
+                } else {
+                    //console.log('Do you reject');
+                }
             });
         };
-        $scope.hide = function(){
-            $scope.loading.hide();
-        };
-
-        function loadFeed() {
-            $scope.show();
-            OpenFB.get('/' + $stateParams.personId + '/home', {limit: 30})
-                .success(function (result) {
-                    $scope.hide();
-                    $scope.items = result.data;
-                    // Used with pull-to-refresh
-                    $scope.$broadcast('scroll.refreshComplete');
-                })
-                .error(function(data) {
-                    $scope.hide();
-                    alert(data.error.message);
-                });
-        }
-
-        $scope.doRefresh = loadFeed;
-
-        loadFeed();
     });

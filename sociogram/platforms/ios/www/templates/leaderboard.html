@@ -1,0 +1,44 @@
+<ion-view title="Leaderboard" hide-back-button="true">
+
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+
+    <ion-content has-header="true" padding="true">
+
+        <ion-refresher
+                pulling-text="Pull to refresh..."
+                on-refresh="doRefresh()">
+        </ion-refresher>
+
+        <div class="button-bar">
+            <a class="button">Day</a>
+            <a class="button">Week</a>
+            <a class="button">Month</a>
+        </div>
+
+        <div class="card">
+            <div class="item item-divider">
+                Your are
+            </div>
+            <div class="item item-text-wrap">
+                This is a basic Card which contains an item that has wrapping text.
+            </div>
+        </div>
+
+        <ion-list>
+            <ion-item ng-repeat="player in players" href="#/app/person/{{friend.id}}">
+                <div class="row">
+                    <div class="col-10">1</div>
+                    <div class="col-20"><img src="" alt="pic"/></div>
+                    <div class="col-50">{{player.name}}</div>
+                    <div class="col-20">{{player.win}} / {{ player.lose}}</div>
+
+                </div>
+
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+
+</ion-view>

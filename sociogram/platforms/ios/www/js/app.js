@@ -2,7 +2,7 @@ angular.module('sociogram', ['ionic', 'openfb', 'sociogram.controllers'])
 
     .run(function ($rootScope, $state, $ionicPlatform, $window, OpenFB) {
 
-        OpenFB.init('134266139947162');
+        OpenFB.init('136820693014991');
 
         $ionicPlatform.ready(function () {
             if (window.StatusBar) {
@@ -82,15 +82,6 @@ angular.module('sociogram', ['ionic', 'openfb', 'sociogram.controllers'])
                     }
                 }
             })
-            .state('app.mutualfriends', {
-                url: "/person/:personId/mutualfriends",
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/mutual-friend-list.html",
-                        controller: "MutualFriendsCtrl"
-                    }
-                }
-            })
             .state('app.person', {
                 url: "/person/:personId",
                 views: {
@@ -106,6 +97,51 @@ angular.module('sociogram', ['ionic', 'openfb', 'sociogram.controllers'])
                     'menuContent': {
                         templateUrl: "templates/feed.html",
                         controller: "FeedCtrl"
+                    }
+                }
+            })
+            .state('app.leaderboard', {
+                url: "/leaderboard",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/leaderboard.html",
+                        controller: "LeaderboardCtrl"
+                    }
+                }
+            })
+            .state('app.lobby', {
+                url: "/lobby",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/lobby.html",
+                        controller: "LobbyCtrl"
+                    }
+                }
+            })
+            .state('app.match', {
+                url: "/match",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/match.html",
+                        controller: "MatchCtrl"
+                    }
+                }
+            })
+            .state('app.invitation', {
+                url: "/invitation",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/invitation.html",
+                        controller: "InvitationCtrl"
+                    }
+                }
+            })
+            .state('app.hand', {
+                url: "/hand/:playerChoice",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/hand.html",
+                        controller: "HandCtrl"
                     }
                 }
             });

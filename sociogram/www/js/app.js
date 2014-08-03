@@ -82,15 +82,6 @@ angular.module('sociogram', ['ionic', 'openfb', 'sociogram.controllers'])
                     }
                 }
             })
-            .state('app.mutualfriends', {
-                url: "/person/:personId/mutualfriends",
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/mutual-friend-list.html",
-                        controller: "MutualFriendsCtrl"
-                    }
-                }
-            })
             .state('app.person', {
                 url: "/person/:personId",
                 views: {
@@ -141,7 +132,16 @@ angular.module('sociogram', ['ionic', 'openfb', 'sociogram.controllers'])
                 views: {
                     'menuContent': {
                         templateUrl: "templates/invitation.html",
-                        controller: "GameCtrl"
+                        controller: "InvitationCtrl"
+                    }
+                }
+            })
+            .state('app.hand', {
+                url: "/hand/:playerChoice",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/hand.html",
+                        controller: "HandCtrl"
                     }
                 }
             });

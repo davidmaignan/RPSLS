@@ -24,7 +24,7 @@ var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
-var mongoose = require('mongoose');
+var mongoose     = require('mongoose');
 
 //Config database
 var configDB = require('./config/database.js');
@@ -84,7 +84,7 @@ app.get('/helloworld', auth, routes.helloworld);
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 require('./config/passport')(passport); // pass passport for configuration
-
+require('./app/api.js')(app); // pass passport for configuration
 
 
 
@@ -111,3 +111,85 @@ app.get('/chat', chat.index(io));
 
 //Routes game
 app.get('/game', game.index(io));
+
+
+io.on('connection', function(socket){
+    console.log('RedisChat - user connected');
+
+    socket.on('disconnect', function(){
+        console.log('RedisChat - user disconnected');
+    });
+
+    socket.on('user:joined', function(user) {
+        var message = user.name + ' joined the room';
+        io.emit('user:joined', {message: message, time: moment(), expires: moment().add(10) })
+    })
+
+    socket.on('message:send', function(message){
+        console.log('message: ' + message);
+        console.log(JSON.stringify(message));
+        // var messageKey = 'message:' + message.name;
+        // console.log('Storing key: ' + messageKey);
+        var messageObj = { message: message.message, name: message.name, time: moment(), expires: moment().add('m', 2).unix() };
+        // console.log('this: ' + JSON.stringify(messageObj));
+        // redisClient.set(messageKey, JSON.stringify(messageObj), redis.print);
+        // redisClient.expire(messageKey, 600);
+
+        console.log('storing to set: messages:' + message.channel);
+
+        //redisClient.zadd('messages:' +  message.channel, moment().add('m', 2).unix(), JSON.stringify(messageObj));
+
+        //Relay the message out to all who are listening.
+        io.emit('message:channel:' + message.channel, messageObj);
+        console.log('emited: ' + messageObj);
+    });
+
+    socket.on('channel:join', function(channelInfo) {
+        console.log('Channel joined - ', channelInfo.channel);
+        console.log(channelInfo);
+        redisClient.zadd('channels', 100, channelInfo.channel, redis.print);
+        console.log('Added to channels: ', channelInfo.channel);
+        //redisClient.zadd('users:' + channelInfo.channel, 100, channelInfo.name, redis.print);
+        // redisClient.zadd('messages:' + channelInfo.channel, 100, channelInfo.channel, redis.print);
+        console.log('messages:' + channelInfo.channel);
+
+        // socket.emit('messages:channel:' + channelInfo.channel, )
+
+        //Add to watch to remove list.
+        // for(var i = 0, j = channelWatchList.length; i < j; i++) {
+        //   if()
+        // }
+        if(channelWatchList.indexOf(channelInfo.channel) == -1) {
+            channelWatchList.push(channelInfo.channel);
+        }
+
+        socket.emit('channels', channelWatchList);
+
+
+        //Emit back any messages that havent expired yet.
+        getMessages(channelInfo.channel).then(function(data){
+            console.log('got messages');
+            // console.log(data);
+            socket.emit('messages:channel:' + channelInfo.channel, data);
+        });
+    })
+
+    sendInvitation();
+
+    function sendInvitation()
+    {
+        socket.emit('invitation:send', { message: 'I challenge U', name: "david", channel: "channel 1" });
+    }
+
+    socket.on('invitation:accepted', function(user) {
+        var message = user.playerId + ' joined the room';
+        console.log(message);
+
+        socket.on('player:move', function(user) {
+            var message = user.playerMove + ' move';
+            console.log(message);
+
+            socket.emit('opponent:move', { opponentMove: 'lizard', channel: "channel 1" });
+        });
+    });
+});

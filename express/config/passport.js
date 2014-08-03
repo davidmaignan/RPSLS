@@ -2,8 +2,7 @@
  * Created by david on 2014-07-24.
  */
 // load all the things we need
-var LocalStrategy    = require('passport-local').Strategy,
-    FacebookStrategy = require('passport-facebook').Strategy,
+var FacebookStrategy = require('passport-facebook').Strategy,
     User             = require('../app/models/user'),
     configAuth       = require('./auth');
 

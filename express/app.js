@@ -84,7 +84,7 @@ app.get('/helloworld', auth, routes.helloworld);
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 require('./config/passport')(passport); // pass passport for configuration
-require('./app/api.js')(app); // pass passport for configuration
+require('./app/api.js')(app, mongoose); // pass passport for configuration
 
 
 

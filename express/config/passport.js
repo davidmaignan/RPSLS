@@ -39,16 +39,33 @@ module.exports = function(passport) {
                         return done(err);
 
                     if (user) {
-                        return done(null, user);
+
+                        //Update logging time and online status
+                        user.facebook.online = true;
+                        user.facebook.loggedin = new Date().getTime();
+
+                        user.save(function(err) {
+                            if (err)
+                                throw err;
+
+                            // if successful, return user
+                            return done(null, newUser);
+                        });
+
                     } else {
 
                         var newUser = new User();
 
                         // set all of the facebook information in our user model
-                        newUser.facebook.id    = profile.id;
-                        newUser.facebook.token = token;
-                        newUser.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
-                        newUser.facebook.email = profile.emails[0].value;
+                        newUser.facebook.id        = profile.id;
+                        newUser.facebook.token     = token;
+                        newUser.facebook.name      = profile.name.givenName + ' ' + profile.name.familyName;
+                        newUser.facebook.email     = profile.emails[0].value;
+                        newUser.facebook.online    = true;
+                        newUser.facebook.createdAt = new Date().getTime();
+                        newUser.facebook.loggedIn  = new Date().getTime();
+                        newUser.win                = 0;
+                        newUser.lose               = 0;
 
                         // save our user to the database
                         newUser.save(function(err) {

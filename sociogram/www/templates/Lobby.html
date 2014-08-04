@@ -11,21 +11,28 @@
                 on-refresh="doRefresh()">
         </ion-refresher>
 
-        <a class="item item-icon-left item-icon-right row" href="#/app/invitation" ng-repeat="player in playerList">
-            <div class="col col-20"><img src="https://graph.facebook.com/1160449371/picture?width=60&height=60" class="pic"></div>
+        <a class="item item-icon-left item-icon-right row lobby" href="#/app/invitation" ng-repeat="player in playerList">
+            <div class="col col-20"><img src="https://graph.facebook.com/{{player.facebook.id}}/picture" class="pic"></div>
             <div class="col">
-                <h2 class="lobby-name">{{ player.facebook.name}}</h2>
-                <img src="img/trophy/cup-gold.png" class="trophy-lobby">
-                <img src="img/trophy/cup-laurier-gold.png" class="trophy-lobby">
-                <img src="img/trophy/trophy-star-gold.png" class="trophy-lobby">
+                <h3 class="lobby">{{ player.facebook.name}}</h3>
+                <ul class="inline">
+                    <li>Win: 23</li>
+                    <li>Lose: 23</li>
+                </ul>
+
             </div>
             <div>
 
             </div>
-            <div class="col col-20 center-block"><div class="join">JOIN</div></div>
-
-
-
+            <div class="col col-30">
+                <img src="img/trophy/badge-gold.png" class="trophy">
+                <img src="img/trophy/cup-gold.png" class="trophy">
+                <img src="img/trophy/medal-gold.png" class="trophy">
+                <img src="img/trophy/trophy-laurier-1.png" class="trophy">
+                <img src="img/trophy/cup-gold.png" class="trophy">
+                <img src="img/trophy/trophy-laurier-1.png" class="trophy">
+                <img src="img/trophy/cup-gold.png" class="trophy">
+            </div>
         </a>
     </ion-content>
 

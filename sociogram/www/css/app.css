@@ -1,10 +1,19 @@
 /* Your app's CSS, go crazy, make it your own */
 
+.login{
+    background: url("../img/rpsls_bg_iphone.jpg") no-repeat top left;
+    background-color: red;
+}
+
 .ionic-logo {
   display: block;
   margin: 15px auto;
   width: 96px;
   height: 96px;
+}
+
+button.login{
+    margin-top: 400px;
 }
 
 .item-body > p {

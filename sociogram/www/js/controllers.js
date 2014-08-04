@@ -48,16 +48,33 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         }
     })
 
-    .controller('LoginCtrl', function ($scope, $location, OpenFB) {
+    .controller('LoginCtrl', function ($scope, $location, OpenFB, $http) {
 
         $scope.facebookLogin = function () {
 
             OpenFB.login('email,read_stream,publish_stream').then(
                 function () {
+
+                    OpenFB.get('/me').success(function (user) {
+                        $http({
+                            method: 'POST',
+                            url: 'http://192.168.0.17:3000/api/players',
+                            params: {
+                                "id":        user.id,
+                                "firstName": user.first_name,
+                                "lastName":  user.last_name,
+                                "email":     user.email
+                            }
+                        }).error(function(data, status, headers, config) {
+                            OpenFB.logout();
+                            $state.go('app.login');
+                        });
+                    });
+
                     $location.path('/app/person/me/feed');
                 },
                 function () {
-                    alert('OpenFB login failed');
+                    alert('I cannot connect with your facebook account.');
                 });
         };
     })

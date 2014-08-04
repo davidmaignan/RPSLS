@@ -45,7 +45,7 @@ angular.module('Icon.services', []).
     factory('iconService', function($http) {
 
         function icon() {
-            var i, j, canvas, ratio, size = 124;
+            var i, j, canvas, ratio, size;
 
             var borderScisor = [
                 [114,45], [93,44], [75, 33], [60, 46], [23, 34], [20, 40], [53, 60], [16, 65],
@@ -117,8 +117,11 @@ angular.module('Icon.services', []).
                 if (canvas.getContext) {
                     ctx = canvas.getContext("2d");
                     ctx.beginPath();
-                    ctx.arc(124 / 2, 124 / 2, 124 / 2 - 5, 0, Math.PI * 2, true);
+                    ctx.arc(size / 2, size / 2, size / 2 - 3, 0, Math.PI * 2, true);
                     ctx.lineWidth = 6;
+                    ctx.fillStyle = '#d6dbe1';
+                    ctx.strokeStyle = '#344458';
+                    ctx.fill();
                     ctx.stroke();
                 }
             }
@@ -127,12 +130,14 @@ angular.module('Icon.services', []).
                 if (canvas.getContext) {
                     ctx = canvas.getContext("2d");
                     ctx.beginPath();
-                    ctx.moveTo(border[0][0], border[0][1]);
+                    ctx.moveTo(border[0][0] * (size/124), border[0][1] * (size/124));
                     for (i = 1; i < border.length; i++) {
-                        ctx.lineTo(border[i][0], border[i][1]);
+                        ctx.lineTo(border[i][0]* (size/124), border[i][1]* (size/124));
                     }
-                    ctx.lineWidth = 2;
+                    ctx.lineWidth = 1.5;
                     ctx.stroke();
+                    ctx.fillStyle = 'white';
+                    ctx.fill();
                     ctx.closePath();
                 }
             }
@@ -142,11 +147,12 @@ angular.module('Icon.services', []).
                 if (canvas.getContext) {
                     for (i = 0; i < details.length; i++) {
                         ctx.beginPath();
-                        ctx.moveTo(details[i][0][0], details[i][0][1]);
+                        ctx.moveTo(details[i][0][0]* (size/124), details[i][0][1]* (size/124));
                         for (j = 1; j < details[i].length; j++) {
-                            ctx.lineTo(details[i][j][0], details[i][j][1]);
+                            ctx.lineTo(details[i][j][0]* (size/124), details[i][j][1]* (size/124));
                         }
-                        ctx.lineWidth = 1;
+                        ctx.lineWidth = .75;
+                        ctx.fillStyle = '#344458';
                         ctx.stroke();
                     }
                 }
@@ -174,6 +180,7 @@ angular.module('Icon.services', []).
                 }
 
                 drawCircle();
+
                 switch(id){
                     case 'rock':
                         drawBorder(borderRock);
@@ -234,6 +241,12 @@ angular.module('Icon.services', []).
 
             function drawIcon(id) {
                 canvas = document.getElementById(id);
+
+                if (canvas.getContext) {
+                    ctx = canvas.getContext("2d");
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    size = canvas.width;
+                }
 
                 drawCircle();
                 switch(id){

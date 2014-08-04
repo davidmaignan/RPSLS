@@ -11,7 +11,12 @@ var userSchema = mongoose.Schema({
         id           : String,
         token        : String,
         email        : String,
-        name         : String
+        name         : String,
+        online       : Boolean,
+        win          : Number,
+        lose         : Number,
+        createdAt    : Date,
+        loggedIn     : Date
     }
 });
 

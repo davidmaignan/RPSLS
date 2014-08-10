@@ -30,13 +30,14 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         var gameId = (playerA < playerB) ? playerA +'_'+ playerB : playerB + '_' + playerA;
 
         var game = {
-            'playerA' :     playerA,
-            'playerB' :     playerB,
-            'id' :          gameId,
+            'playerA'     : playerA,
+            'playerB'     : playerB,
+            'id'          : gameId,
             'playerAHand' : null,
             'playerBHand' : null,
-            'winner':       null,
-            'loser':        null
+            'winner'      : null,
+            'loser'       : null,
+            'completed'   : null
         }
 
         $scope.invitationSent = 'false';
@@ -247,6 +248,7 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
                 } else {
                     //console.log('Do you reject');
                     socket.emit('server:rejected', game );
+                    $window.location.href = '#/app/lobby';
                 }
             });
         };
@@ -300,13 +302,13 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
 
                         var message = $scope.result + "@ I challenge U against xxx";
 
-                        OpenFB.post('/me/feed', "testing")
-                            .success(function () {
-                                $scope.status = "This item has been shared on OpenFB";
-                            })
-                            .error(function(data) {
-                                alert(data.error.message);
-                            });
+//                        OpenFB.post('/me/feed', "testing")
+//                            .success(function () {
+//                                $scope.status = "This item has been shared on OpenFB";
+//                            })
+//                            .error(function(data) {
+//                                alert(data.error.message);
+//                            });
                     }
 
                     console.log(game);
@@ -331,7 +333,7 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         $scope.newTask = function() {
             //socket.emit('message:send', { message: 'test message', name: "david", channel: "channel 1" });
             socket.emit('playerMove', "player move");
-            console.log("new task");
+            //console.log("new task");
         };
 
         socket.on('updategame', function (username, data) {

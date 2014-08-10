@@ -13,11 +13,14 @@ var userSchema = mongoose.Schema({
         email        : String,
         name         : String,
         online       : Boolean,
-        win          : Number,
-        lose         : Number,
+        winner       : Number,
+        loser        : Number,
         createdAt    : Date,
-        loggedIn     : Date
-    }
+        loggedIn     : Date,
+        test         : Boolean
+    },
+    win:  Number,
+    lost: Number
 });
 
 userSchema.methods.generateHash = function(password) {

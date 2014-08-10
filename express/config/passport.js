@@ -64,8 +64,9 @@ module.exports = function(passport) {
                         newUser.facebook.online    = true;
                         newUser.facebook.createdAt = new Date().getTime();
                         newUser.facebook.loggedIn  = new Date().getTime();
-                        newUser.win                = 0;
-                        newUser.lose               = 0;
+                        newUser.facebook.test      = false;
+                        newUser.win    = 0;
+                        newUser.lost   = 0;
 
                         // save our user to the database
                         newUser.save(function(err) {

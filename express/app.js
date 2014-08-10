@@ -111,7 +111,7 @@ var io = require('socket.io').listen(server);
 app.get('/chat', chat.index(io));
 
 //Routes game
-app.get('/game', game.index(io));
+//app.get('/game', game.index(io));
 
 
 //GameManager
@@ -120,7 +120,8 @@ app.get('/game', game.index(io));
 //Routes game
 app.get('/leaderboard', game.leaderboard());
 
-var User = require('./app/models/user')
+var User = require('./app/models/user');
+var Game = require('./app/models/game');
 
 function GameManager() {
     var rules = [
@@ -249,12 +250,15 @@ io.sockets.on('connection', function (socket) {
 
     //Invitation
     socket.on('server:invitation', function(game){
-        io.sockets.emit('client:invitation', game);;
+        console.log('server:invitation');
+        io.sockets.emit('client:invitation', game);
     });
 
     socket.on('server:accepted', function(game){
         io.sockets.emit('client:accepted', game);
+        console.log('server:accepted');
         gameManager.addGame(game);
+        saveGame(game);
     });
 
     socket.on('server:rejected', function(game){
@@ -267,6 +271,116 @@ io.sockets.on('connection', function (socket) {
 
         if(game !== false) {
             io.sockets.emit('client:result', game);
+            saveGame(game);
+            updateUserResult(game)
         }
-    })
+    });
+
+    function updateUserResult(gameParameters) {
+
+        User.findOne({ 'facebook.id' : gameParameters.playerA }, function(err, user) {
+
+            //an error connecting to the database
+            if (err)
+                return done(err);
+
+            if (user) {
+
+                if(gameParameters.winner === user.facebook.id)
+                    user.win = user.win + 1;
+                else if(gameParameters.loser === user.facebook.id)
+                    user.lost = user.lost + 1;
+
+                //TODO - Implement user status
+
+                user.save(function (err) {
+                    if (err)
+                        throw err;
+
+                    // if successful, return user
+                    console.log('user updated');
+                    return true
+                });
+            }
+        });
+
+        User.findOne({ 'facebook.id' : gameParameters.playerB }, function(err, user) {
+
+            //an error connecting to the database
+            if (err)
+                return done(err);
+
+            if (user) {
+
+                if(gameParameters.winner === user.facebook.id)
+                    user.win = user.win + 1;
+                else if(gameParameters.loser === user.facebook.id)
+                    user.lost = user.lost + 1;
+
+                //TODO - Implement user status
+
+                user.save(function (err) {
+                    if (err)
+                        throw err;
+
+                    // if successful, return user
+                    console.log('user updated');
+                    return true
+                });
+            }
+        });
+    }
+
+    function saveGame(gameParameters) {
+        // find the user in the database based on their facebook id
+        Game.findOne({ 'id' : gameParameters.id, 'completed': null }, function(err, game) {
+
+            console.log("game creation", game);
+
+            //an error connecting to the database
+            if (err)
+                return done(err);
+
+            if (game === null) {
+
+                var newGame = new Game();
+
+                // set all of the facebook information in our user model
+                newGame.id          = gameParameters.id;
+                newGame.playerA     = gameParameters.playerA;
+                newGame.playerB     = gameParameters.playerB;
+                newGame.playerAHand = null
+                newGame.playerBHand = null;
+                newGame.winner      = null;
+                newGame.createdAt   = new Date().getTime();
+                newGame.completedAt = null;
+
+                // save our user to the database
+                newGame.save(function(err) {
+                    if (err)
+                        throw err;
+
+                    return true;
+                });
+            } else {
+                //Update logging time and online status
+                game.playerAHand = gameParameters.playerAHand;
+                game.playerBHand = gameParameters.playerBHand;
+                game.winner      = gameParameters.winner;
+                game.loser       = gameParameters.loser;
+                game.completedAt = new Date().getTime();
+                game.misson      = gameParameters.mission;
+                game.publicly    = gameParameters.publicly;
+                game.completed   = new Date().getTime();
+
+                game.save(function(err) {
+                    if (err)
+                        throw err;
+
+                    console.log("game updated");
+                    return true
+                });
+            }
+        });
+    };
 });

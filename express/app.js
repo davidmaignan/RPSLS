@@ -16,7 +16,8 @@ var express    = require('express'),
 	monk       = require('monk'),
 	//db         = monk('localhost:27017/nodetest1'),
 	app        = express(),
-	reload     = require('reload');
+	reload     = require('reload'),
+    events     = require('events');
 
 var passport     = require('passport');
 var flash        = require('connect-flash');
@@ -25,6 +26,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
 var mongoose     = require('mongoose');
+var eventEmitter = new events.EventEmitter();
 
 //Config database
 var configDB = require('./config/database.js');
@@ -84,8 +86,7 @@ app.get('/helloworld', auth, routes.helloworld);
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 require('./config/passport')(passport); // pass passport for configuration
-require('./app/api.js')(app, mongoose); // pass passport for configuration
-
+require('./app/api.js')(app, mongoose, eventEmitter); // pass passport for configuration
 
 
 //Cookie
@@ -113,83 +114,159 @@ app.get('/chat', chat.index(io));
 app.get('/game', game.index(io));
 
 
-io.on('connection', function(socket){
-    console.log('RedisChat - user connected');
+//GameManager
+//require('./app/gameManager')(io, eventEmitter, mongoose);
 
-    socket.on('disconnect', function(){
-        console.log('RedisChat - user disconnected');
-    });
+//Routes game
+app.get('/leaderboard', game.leaderboard());
 
-    socket.on('user:joined', function(user) {
-        var message = user.name + ' joined the room';
-        io.emit('user:joined', {message: message, time: moment(), expires: moment().add(10) })
-    })
+var User = require('./app/models/user')
 
-    socket.on('message:send', function(message){
-        console.log('message: ' + message);
-        console.log(JSON.stringify(message));
-        // var messageKey = 'message:' + message.name;
-        // console.log('Storing key: ' + messageKey);
-        var messageObj = { message: message.message, name: message.name, time: moment(), expires: moment().add('m', 2).unix() };
-        // console.log('this: ' + JSON.stringify(messageObj));
-        // redisClient.set(messageKey, JSON.stringify(messageObj), redis.print);
-        // redisClient.expire(messageKey, 600);
+function GameManager() {
+    var rules = [
+                [[0,0], [-1,1], [1,-1], [1,-1], [-1,1]],
+                [[1,-1], [0,0], [-1,1], [-1,1], [1,-1]],
+                [[-1,1], [1,-1], [0,0], [1,-1], [-1,1]],
+                [[-1,1], [1,-1], [-1,1], [0,0], [1,-1]],
+                [[1,-1], [-1,1], [1,-1], [-1,1], [0,0]]
+                ];
 
-        console.log('storing to set: messages:' + message.channel);
+    var gameList = [];
 
-        //redisClient.zadd('messages:' +  message.channel, moment().add('m', 2).unix(), JSON.stringify(messageObj));
-
-        //Relay the message out to all who are listening.
-        io.emit('message:channel:' + message.channel, messageObj);
-        console.log('emited: ' + messageObj);
-    });
-
-    socket.on('channel:join', function(channelInfo) {
-        console.log('Channel joined - ', channelInfo.channel);
-        console.log(channelInfo);
-        redisClient.zadd('channels', 100, channelInfo.channel, redis.print);
-        console.log('Added to channels: ', channelInfo.channel);
-        //redisClient.zadd('users:' + channelInfo.channel, 100, channelInfo.name, redis.print);
-        // redisClient.zadd('messages:' + channelInfo.channel, 100, channelInfo.channel, redis.print);
-        console.log('messages:' + channelInfo.channel);
-
-        // socket.emit('messages:channel:' + channelInfo.channel, )
-
-        //Add to watch to remove list.
-        // for(var i = 0, j = channelWatchList.length; i < j; i++) {
-        //   if()
-        // }
-        if(channelWatchList.indexOf(channelInfo.channel) == -1) {
-            channelWatchList.push(channelInfo.channel);
-        }
-
-        socket.emit('channels', channelWatchList);
-
-
-        //Emit back any messages that havent expired yet.
-        getMessages(channelInfo.channel).then(function(data){
-            console.log('got messages');
-            // console.log(data);
-            socket.emit('messages:channel:' + channelInfo.channel, data);
-        });
-    })
-
-    sendInvitation();
-
-    function sendInvitation()
-    {
-        socket.emit('invitation:send', { message: 'I challenge U', name: "david", channel: "channel 1" });
+    function addGame(game) {
+        gameList.push(game);
+        console.log("game added");
     }
 
-    socket.on('invitation:accepted', function(user) {
-        var message = user.playerId + ' joined the room';
-        console.log(message);
+    function handValue(hand) {
+        switch (hand) {
+            case('rock'):
+                return 0;
+            case('paper'):
+                return 1;
+            case('scissor'):
+                return 2;
+            case('lizard'):
+                return 3;
+            case('spock'):
+                return 4;
+        }
+    }
 
-        socket.on('player:move', function(user) {
-            var message = user.playerMove + ' move';
-            console.log(message);
+    function addPlayerHand(playerHand) {
+        //console.log("addPlayerHand : ", gameList.length);
+        var game;
+        for (game in gameList) {
+            //console.log(gameList[game].id);
+            if(gameList.hasOwnProperty( game ) && gameList[game].id.indexOf(playerHand.playerId) !== -1) {
 
-            socket.emit('opponent:move', { opponentMove: 'lizard', channel: "channel 1" });
+                setPlayerHand(gameList[game], playerHand);
+
+                if (gameList[game].playerAHand !== null && gameList[game].playerBHand !== null) {
+                    return setResult(gameList[game]);
+                }
+
+                return false;
+            }
+        }
+    }
+
+    function setResult(game)
+    {
+        var gameResult = rules[handValue(game.playerAHand)][handValue(game.playerBHand)];
+
+        console.log("playerA:" + gameResult[0], "playerB:" +  gameResult[1]);
+
+        if(gameResult[0] == -1) {
+            game.winner = game.playerB;
+            game.loser  = game.playerA;
+        }
+
+        if(gameResult[1] == -1) {
+            game.winner = game.playerA;
+            game.loser  = game.playerB;
+        }
+
+        return game;
+    }
+
+    function setPlayerHand(game, playerHand){
+        if(playerHand.playerId == game.playerA) {
+            game.playerAHand = playerHand.hand;
+            return;
+        }
+
+        game.playerBHand = playerHand.hand;
+    }
+
+    return {
+        addGame:       addGame,
+        addPlayerHand: addPlayerHand
+    }
+}
+
+var gameManager = new GameManager();
+
+
+io.sockets.on('connection', function (socket) {
+
+    console.log('connected');
+
+    socket.on('addPlayer', function(username){
+        socket.username   = username;
+        players[username] = username;
+        socket.emit('updategame', 'SERVER', 'you are ready to play');
+    });
+
+    socket.on('playerMove', function (data) {
+        io.sockets.emit('updategame', socket.username, data);
+    });
+
+    //Login - Logout
+    socket.on('server:connect', function(userFacebook){
+        io.sockets.emit('client:connect');
+    });
+
+    socket.on('server:disconnect', function(userFacebook){
+        User.findOne({ 'facebook.id' : userFacebook.id }, function(err, user) {
+            if (user) {
+                //Update logging time and online status
+                user.facebook.online = false;
+
+                user.save(function (err) {
+                    if (err) {
+                        console.log("user not save");
+                        return false
+                    }
+
+                    // if successful, return user
+                    io.sockets.emit('client:disconnect');
+                    return true
+                });
+            }
         });
     });
+
+    //Invitation
+    socket.on('server:invitation', function(game){
+        io.sockets.emit('client:invitation', game);;
+    });
+
+    socket.on('server:accepted', function(game){
+        io.sockets.emit('client:accepted', game);
+        gameManager.addGame(game);
+    });
+
+    socket.on('server:rejected', function(game){
+        io.sockets.emit('client:rejected', game);
+    });
+
+    socket.on('server:playerHand', function(playerHand) {
+        console.log("playerHand", playerHand);
+        var game = gameManager.addPlayerHand(playerHand);
+
+        if(game !== false) {
+            io.sockets.emit('client:result', game);
+        }
+    })
 });

@@ -1,7 +1,7 @@
 //API
 var User = require('../app/models/user');
 
-module.exports = function(app, mongoose) {
+module.exports = function(app, mongoose, eventEmitter) {
 
     var mongoose = mongoose;
 
@@ -42,36 +42,69 @@ module.exports = function(app, mongoose) {
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-        var playerCollection = User.find(function(err, collection) {
+        //"facebook.id" : { $ne: req.params.userId
+
+        var playerCollection = User.find({ "facebook.online": true} , function(err, collection) {
             if (err) {
                 res.send(500)
             }
-            console.log(collection);
+
+            //console.log(collection);
+
             res.json(collection);
         });
 
     });
 
     app.post('/api/players', function(req, res) {
-        var newUser = new User();
 
-        // set all of the facebook information in our user model
-        newUser.facebook.id        = req.query.id;
-        newUser.facebook.token     = req.query.token;
-        newUser.facebook.name      = req.query.firstName + ' ' + req.query.lastName;
-        newUser.facebook.email     = req.query.email;
-        newUser.facebook.online    = true;
-        newUser.facebook.createdAt = new Date().getTime();
-        newUser.facebook.loggedIn  = new Date().getTime();
-        newUser.win                = req.query.win;
-        newUser.lose               = req.query.lose;
+        User.findOne({ 'facebook.id' :req.query.id }, function(err, user) {
 
-        var saveUser = newUser.save(function(err) {
-            if (err) {
-                return false
+            //an error connecting to the database
+            if (err)
+                return done(err);
+
+            if (user) {
+
+                //Update logging time and online status
+                user.facebook.online = true;
+                user.facebook.loggedin = new Date().getTime();
+
+                user.save(function (err) {
+                    if (err) {
+                        console.log("user not save");
+                        return false
+                    }
+
+                    // if successful, return user
+                    return true
+                });
+
+            } else {
+                var newUser = new User();
+
+                // set all of the facebook information in our user model
+                newUser.facebook.id        = req.query.id;
+                newUser.facebook.token     = req.query.token;
+                newUser.facebook.name      = req.query.firstName + ' ' + req.query.lastName;
+                newUser.facebook.email     = req.query.email;
+                newUser.facebook.online    = true;
+                newUser.facebook.createdAt = new Date().getTime();
+                newUser.facebook.loggedIn  = new Date().getTime();
+                newUser.win                = req.query.win;
+                newUser.lose               = req.query.lose;
+
+                newUser.save(function(err) {
+                    if (err) {
+                        console.log("user not save");
+                        return false
+                    }
+
+                    console.log("user save");
+                    //eventEmitter.emit('user:joined', newUser);
+                    return true
+                });
             }
-
-            return true
         });
 
         res.header('Access-Control-Allow-Origin', '*');

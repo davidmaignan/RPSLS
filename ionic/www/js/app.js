@@ -128,7 +128,7 @@ angular.module('sociogram', ['ionic', 'openfb', 'sociogram.controllers'])
                 }
             })
             .state('app.invitation', {
-                url: "/invitation",
+                url: "/invitation/:playerId",
                 views: {
                     'menuContent': {
                         templateUrl: "templates/invitation.html",

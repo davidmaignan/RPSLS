@@ -27,3 +27,10 @@ exports.index = function(io){
         res.render('game', { title: 'Game homepage' });
     };
 };
+
+
+exports.leaderboard = function() {
+    return function(req, res){
+        res.render('leaderboard', { title: 'Leaderboard homepage' });
+    };
+}

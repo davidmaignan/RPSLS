@@ -2,11 +2,19 @@ extends layout
 
 block content
   #container
-    div(class="jumbotron text-center")
-        h1
-            span(class="fa fa-lock")
-        | Authentification
-        p Login with:
-        a(href="/auth/facebook", class="btn btn-primary")
-            span(class="fa fa-facebook")
-            | Facebook
+    div(class="row")
+        div(class="col-md-12 text-center")
+            img(src="./img/logo_index.png")
+    div(class="row")
+        div(class="col-md-12 text-center")
+            h1 RPSLC
+            p rock paper scisor lizard spock
+
+    div(class="row")
+        div(class="col-md-12 text-center")
+            h1
+            | Authentification
+            p
+            a(href="/auth/facebook", class="btn btn-primary")
+                span(class="fa fa-facebook")
+                | Login with Facebook

@@ -141,6 +141,7 @@ angular.module('openfb', [])
          */
         function logout() {
             tokenStore['fbtoken'] = undefined;
+            tokenStore['userId'] = undefined;
         }
 
         /**

@@ -27,14 +27,14 @@ angular.module('services', [])
     })
 
 angular.module('Player.services', []).
-    factory('playerAPIService', function($http) {
+    factory('playerAPIService', function($http, $window) {
 
         var playerAPI = {};
 
         playerAPI.getList = function() {
             return $http({
                 method: 'GET',
-                url: 'http://192.168.0.17:3000/api/players'
+                url: 'http://192.168.0.17:3000/api/players/'
             });
         }
 
@@ -168,7 +168,8 @@ angular.module('Icon.services', []).
 
                     drawCircle();
                     ctx.font = 'bold 80pt Arial';
-                    ctx.fillText(font, 35, 100);
+                    ctx.fillStyle = 'white';
+                    ctx.fillText(font, 25, 90);
                 }
             }
 

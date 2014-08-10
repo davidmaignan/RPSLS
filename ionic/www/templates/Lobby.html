@@ -11,7 +11,7 @@
                 on-refresh="doRefresh()">
         </ion-refresher>
 
-        <a class="item item-icon-left item-icon-right row lobby" href="#/app/invitation" ng-repeat="player in playerList">
+        <a class="item item-icon-left item-icon-right row lobby" href="#/app/invitation/{{ player.facebook.id }}" ng-repeat="player in playerList">
             <div class="col col-20"><img src="https://graph.facebook.com/{{player.facebook.id}}/picture" class="pic"></div>
             <div class="col">
                 <h3 class="lobby">{{ player.facebook.name}}</h3>

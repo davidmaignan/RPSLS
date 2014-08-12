@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>FC0CFB6F-37D5-4120-BA16-429CAF7F0287</string>
+	<key>IDESourceControlProjectName</key>
+	<string>sociogram</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>7DCD0BC2-8E37-490E-9715-9342713F3356</key>
+		<string>https://github.com/davidmaignan/RPSLS.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ionic/platforms/ios/sociogram.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>7DCD0BC2-8E37-490E-9715-9342713F3356</key>
+		<string>../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/davidmaignan/RPSLS.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>7DCD0BC2-8E37-490E-9715-9342713F3356</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>7DCD0BC2-8E37-490E-9715-9342713F3356</string>
+			<key>IDESourceControlWCCName</key>
+			<string>RPSLS</string>
+		</dict>
+	</array>
+</dict>
+</plist>

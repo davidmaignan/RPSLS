@@ -139,6 +139,16 @@ function GameManager() {
         console.log("game added");
     }
 
+    function removeGame(gameParameters) {
+        var i;
+        for(i = 0; i < gameList.length; i++ ) {
+            if (gameList[i].id === gameParameters.id) {
+                gameList.splice(i, 1);
+                console.log("game removed from the list");
+            }
+        }
+    }
+
     function handValue(hand) {
         switch (hand) {
             case('rock'):
@@ -202,12 +212,12 @@ function GameManager() {
 
     return {
         addGame:       addGame,
+        removeGame:    removeGame,
         addPlayerHand: addPlayerHand
     }
 }
 
 var gameManager = new GameManager();
-
 
 io.sockets.on('connection', function (socket) {
 
@@ -229,6 +239,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('server:disconnect', function(userFacebook){
+        console.log('server:disconnect');
         User.findOne({ 'facebook.id' : userFacebook.id }, function(err, user) {
             if (user) {
                 //Update logging time and online status
@@ -270,9 +281,9 @@ io.sockets.on('connection', function (socket) {
         var game = gameManager.addPlayerHand(playerHand);
 
         if(game !== false) {
-            io.sockets.emit('client:result', game);
             saveGame(game);
-            updateUserResult(game)
+            updateUserResult(game);
+            io.sockets.emit('client:result', game);
         }
     });
 
@@ -332,6 +343,11 @@ io.sockets.on('connection', function (socket) {
     }
 
     function saveGame(gameParameters) {
+
+        if(gameParameters === null) {
+            return;
+        }
+
         // find the user in the database based on their facebook id
         Game.findOne({ 'id' : gameParameters.id, 'completed': null }, function(err, game) {
 
@@ -378,6 +394,7 @@ io.sockets.on('connection', function (socket) {
                         throw err;
 
                     console.log("game updated");
+                    gameManager.removeGame(game);
                     return true
                 });
             }

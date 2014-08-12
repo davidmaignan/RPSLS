@@ -64,7 +64,7 @@ angular.module('sociogram', ['ionic', 'openfb', 'sociogram.controllers'])
             })
 
             .state('app.share', {
-                url: "/share",
+                url: "/share/:message",
                 views: {
                     'menuContent': {
                         templateUrl: "templates/share.html",

@@ -2,7 +2,7 @@
 
 .login{
     background: url("../img/rpsls_bg_iphone.jpg") no-repeat top left;
-    background-color: red;
+    background-color: #344559;
 }
 
 .ionic-logo {
@@ -10,6 +10,17 @@
   margin: 15px auto;
   width: 96px;
   height: 96px;
+}
+
+#topBar{
+    background-color: #344559;
+    border-color: #344559;
+}
+
+
+#menu{
+    background-color: #6d84a1;
+    border-color: #6d84a1;
 }
 
 button.login{

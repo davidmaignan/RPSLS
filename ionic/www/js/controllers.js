@@ -179,6 +179,8 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
     .controller('LobbyCtrl', function ($scope, $stateParams, socket, playerAPIService,
                                        $ionicModal, $ionicPopup, $ionicLoading, $window) {
 
+        $scope.invitation = false;
+
         $scope.show = function() {
             $scope.loading = $ionicLoading.show({
                 content: 'Loading players'
@@ -216,7 +218,8 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         });
 
         socket.on('client:invitation', function (game) {
-            if(game.playerB == parseInt($window.sessionStorage.userId)) {
+            if(game.playerB == parseInt($window.sessionStorage.userId) && $scope.invitation === false) {
+                $scope.invitation = true;
                 $scope.showInvitation(game);
             }
         });
@@ -245,10 +248,12 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
                 if(res) {
                     socket.emit('server:accepted', game );
                     $window.location.href = '#/app/match';
+                    //$scope.invitation = false;
                 } else {
                     //console.log('Do you reject');
                     socket.emit('server:rejected', game );
                     $window.location.href = '#/app/lobby';
+                    //$scope.invitation = false;
                 }
             });
         };
@@ -261,6 +266,7 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         iconService.drawFont('opponentChoice', '?');
 
         $scope.result = "Waiting for your opponent";
+        $scope.item = {};
 
         socket.emit('server:playerHand', {
             playerId: parseInt($window.sessionStorage.userId),
@@ -270,10 +276,14 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         socket.on('client:result', function (game) {
 
             var opponentChoice = game.playerAHand;
-            var userId         = parseInt($window.sessionStorage.userId)
+            var opponentId    = game.playerA;
+            var userId         = parseInt($window.sessionStorage.userId);
+
+            $scope.postButton = false;
 
             if(userId === game.playerA) {
                 opponentChoice = game.playerBHand;
+                game.playerB;
             }
 
             $scope.timer = 3;
@@ -285,30 +295,33 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
                 $scope.timer --;
                 if($scope.timer === -1) {
 
+                    var opponent;
+
                     iconService.drawOpponentChoice(opponentChoice);
-
-
 
                     if(game.winner == userId) {
                         $scope.result = "YOU WIN";
+                        opponent = game.loser;
 
                     } else if (game.winner === null){
                         $scope.result = "IT'S A TIE";
+                        opponent = (userId == game.playerA)? game.playerB : game.playerA;
                     }else{
                         $scope.result = "YOU LOSE";
+                        opponent = game.winner;
                     }
 
                     if (game.publicly === 'true') {
 
-                        var message = $scope.result + "@ I challenge U against xxx";
+                        $scope.item.message = $scope.result + "@ I challenge U against ". opponent;
 
-//                        OpenFB.post('/me/feed', "testing")
-//                            .success(function () {
-//                                $scope.status = "This item has been shared on OpenFB";
-//                            })
-//                            .error(function(data) {
-//                                alert(data.error.message);
-//                            });
+                        OpenFB.post('/me/feed', $scope.item)
+                            .success(function () {
+
+                            })
+                            .error(function(data) {
+                                alert(data.error.message);
+                            });
                     }
 
                     console.log(game);
@@ -316,6 +329,21 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
             }, 1000, 4);
 
         });
+
+        $scope.showPostButton = function() {
+            return true === $scope.postButton;
+        };
+
+
+        $scope.share = function () {
+            OpenFB.post('/me/feed', $scope.item)
+                .success(function () {
+
+                })
+                .error(function(data) {
+                    alert(data.error.message);
+                });
+        };
     })
 
     .controller('MatchCtrl', function ($scope, $stateParams, iconService, $ionicLoading) {

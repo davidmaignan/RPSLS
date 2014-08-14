@@ -198,12 +198,9 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
                 success(function (data, status, headers, config) {
                     $scope.hide();
                     $scope.playerList = data;
-                    console.log(data);
-                    console.log(data);
                 }).
                 error(function (data, status, headers, config) {
                     $scope.hide();
-                    console.log(data);
                 });
         }
 
@@ -226,10 +223,12 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
 
         // A invitation dialog
         $scope.showInvitation = function(game) {
+            $scope.invitation = true;
             var confirmPopup = $ionicPopup.confirm({
                 buttons: [
                     { text: 'Reject',
                         onTap: function(e) {
+                            $scope.invitation = false;
                             return false;
                         }
                     },
@@ -248,12 +247,12 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
                 if(res) {
                     socket.emit('server:accepted', game );
                     $window.location.href = '#/app/match';
-                    //$scope.invitation = false;
+                    $scope.invitation = false;
                 } else {
                     //console.log('Do you reject');
                     socket.emit('server:rejected', game );
                     $window.location.href = '#/app/lobby';
-                    //$scope.invitation = false;
+                    $scope.invitation = false;
                 }
             });
         };

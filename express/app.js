@@ -4,9 +4,6 @@
  */
 
 var express    = require('express'),
-	routes     = require('./routes'),
-	user       = require('./routes/user'),
-	cookie     = require('./routes/cookie'),
     game       = require('./routes/game'),
 	http       = require('http'),
 	path       = require('path'),
@@ -63,8 +60,6 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-//Routes
-app.get('/', routes.index);
 
 // routes ======================================================================
 require('./app/routes.js')(app, passport);

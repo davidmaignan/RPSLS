@@ -1,0 +1,46 @@
+<ion-view title="Lobby" hide-back-button="true">
+
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+
+    <ion-content has-header="true" padding="" id="lobby">
+
+        <ion-refresher
+                pulling-text="Pull to refresh..."
+                on-refresh="doRefresh()">
+        </ion-refresher>
+
+        <a class="item item-icon-left item-icon-right row lobby" href="#/app/invitation/{{ player.facebook.id }}" ng-repeat="player in playerList">
+            <div class="col col-20"><img src="https://graph.facebook.com/{{player.facebook.id}}/picture" class="pic"></div>
+            <div class="col">
+                <h3 class="lobby">{{ player.facebook.name}}</h3>
+                <ul class="inline">
+                    <li class="green">Won: <b>23</b></li>
+                    <li class="red">Lost: <b>54</b></li>
+                </ul>
+
+            </div>
+            <div>
+
+            </div>
+            <div class="col col-30">
+                <img src="img/trophy/badge-gold.png" class="trophy">
+                <img src="img/trophy/cup-gold.png" class="trophy">
+                <img src="img/trophy/medal-gold.png" class="trophy">
+                <img src="img/trophy/trophy-laurier-1.png" class="trophy">
+                <img src="img/trophy/cup-gold.png" class="trophy">
+                <img src="img/trophy/trophy-laurier-1.png" class="trophy">
+                <img src="img/trophy/cup-gold.png" class="trophy">
+            </div>
+        </a>
+    </ion-content>
+
+
+    <h2>{{ player.facebook.name}}</h2>
+
+
+
+    <p>Score: 1234</p>
+
+</ion-view>

@@ -1,1 +1,5 @@
 .DS_Store
+express/node_modules/*
+.idea
+express/data/*
+sociogram/platforms/*

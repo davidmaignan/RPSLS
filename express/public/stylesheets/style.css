@@ -1,0 +1,28 @@
+body {
+  padding:10px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+/*LOGIN*/
+body{
+    background:url('../img/rpsls_bg_ipad.jpg') repeat;
+    color: white;
+    min-height: 300px;
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen
+and (min-width : 321px) {
+
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen
+and (max-width : 320px) {
+    /* Styles */
+
+}

@@ -1,19 +1,22 @@
 /* Your app's CSS, go crazy, make it your own */
 
-.login{
-    background-color: #344559;
-}
+
 
 @media screen and (min-width: 961px) {
     .login{
-        background: url("../img/logo-large.jpg") no-repeat top left;
+        background: url("../img/logo-large.png") no-repeat top center;
     }
 }
 
 @media screen and (max-width: 960px) {
     .login{
-        background: url("../img/logo-small.jpg") no-repeat top left;
+        background: url("../img/logo-small.png") no-repeat top center;
     }
+}
+
+
+.login {
+    background-color: #3a4656;
 }
 
 .ionic-logo {
@@ -24,14 +27,14 @@
 }
 
 #topBar{
-    background-color: #344559;
-    border-color: #344559;
+    background-color: #3a4656;
+    border-color: #3a4656;
 }
 
 
 #menu{
-    background-color: #6d84a1;
-    border-color: #6d84a1;
+    background-color: #def6f2;
+    border-color: #def6f2;
 }
 
 button.login{

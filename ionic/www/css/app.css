@@ -1,8 +1,19 @@
 /* Your app's CSS, go crazy, make it your own */
 
 .login{
-    background: url("../img/rpsls_bg_iphone.jpg") no-repeat top left;
     background-color: #344559;
+}
+
+@media screen and (min-width: 961px) {
+    .login{
+        background: url("../img/logo-large.jpg") no-repeat top left;
+    }
+}
+
+@media screen and (max-width: 960px) {
+    .login{
+        background: url("../img/logo-small.jpg") no-repeat top left;
+    }
 }
 
 .ionic-logo {

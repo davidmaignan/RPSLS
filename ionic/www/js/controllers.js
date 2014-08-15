@@ -54,8 +54,8 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
             $scope.invitationValues = resolveForm(this);
             $scope.invitationSent   = 'true';
 
-            game.mission = $scope.invitationValues.mission;
-            game.publicly = $scope.invitationValues.publicly;
+            game.mission     = $scope.invitationValues.mission;
+            game.publicly    = $scope.invitationValues.publicly;
             game.description = $scope.invitationValues.description;
 
             socket.emit('server:invitation', game);
@@ -215,8 +215,6 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         });
 
         socket.on('client:invitation', function (game) {
-            console.log("client:invitation", game, $scope.invitation);
-
             if(game.playerB == parseInt($window.sessionStorage.userId) && $scope.invitation === false) {
                 $scope.showInvitation(game);
             }
@@ -224,10 +222,20 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
 
         // A invitation dialog
         $scope.showInvitation = function(game) {
+            var challenger;
+
             $scope.invitation = true;
+
+            $scope.playerList.forEach(function(player) {
+                if (game.playerA == player.facebook.id) {
+                    challenger = player.facebook.name;
+                }
+            });
+
             var confirmPopup = $ionicPopup.confirm({
                 buttons: [
-                    { text: 'Reject',
+                    {
+                        text: 'Reject',
                         onTap: function(e) {
                             $scope.invitation = false;
                             return false;
@@ -242,7 +250,7 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
                     }
                 ],
                 title:    'A challenge was sent to you',
-                template: 'The mission is humiliation in public'
+                template: 'The challenge "'+ game.description +'" is "'+ game.mission +'" in "'+ (game.publicly === 'true' ? 'Public' : 'Private') +'" from "'+ challenger +'"'
             });
 
             confirmPopup.then(function(res) {
@@ -274,6 +282,8 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         });
 
         socket.on('client:result', function (game) {
+            console.log('client:result', game);
+
             var opponentChoice = game.playerAHand,
                 opponentId     = game.playerA,
                 userId         = parseInt($window.sessionStorage.userId);
@@ -282,35 +292,30 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
 
             if(userId === game.playerA) {
                 opponentChoice = game.playerBHand;
-                game.playerB;
+                opponentId     = game.playerB;
             }
 
-            $scope.timer = 3;
+            $scope.timer = 5;
 
             var stop = $interval(function() {
-                iconService.drawFont('opponentChoice', $scope.timer);
-                console.log("counter");
-                $scope.timer --;
-                if($scope.timer === -1) {
-                    var opponent;
+                if (($scope.timer - 2) > 0) {
+                    iconService.drawFont('opponentChoice', ($scope.timer - 2));
+                }
 
+                $scope.timer --;
+                if($scope.timer === 1) {
                     iconService.drawOpponentChoice(opponentChoice);
 
                     if(game.winner == userId) {
                         $scope.result = "YOU WIN";
-                        opponent = game.loser;
                     } else if (game.winner === null){
                         $scope.result = "IT'S A TIE";
-                        opponent = (userId == game.playerA)? game.playerB : game.playerA;
-                    } else{
+                    } else {
                         $scope.result = "YOU LOSE";
-                        opponent = game.winner;
                     }
 
-                    console.log("Facebook post scope", $scope.item);
-
                     if (game.publicly === 'true') {
-                        $scope.item.message = $scope.result + "@ I challenge U against ". opponent;
+                        $scope.item.message = $scope.result + " @ "+ game.description +" --ichallengeu";
 
                         OpenFB.post('/me/feed', $scope.item)
                             .success(function () {})
@@ -319,8 +324,12 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
 
                     console.log(game);
                 }
-            }, 1000, 4);
 
+                if($scope.timer === -1) {
+                    $window.location.href = '#/app/lobby';
+                    $window.location.reload();
+                }
+            }, 1000, 6);
         });
 
         $scope.showPostButton = function() {
@@ -330,7 +339,6 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         $scope.share = function () {
             OpenFB.post('/me/feed', $scope.item)
                 .success(function () {
-
                 })
                 .error(function(data) {
                     alert(data.error.message);
@@ -339,7 +347,6 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
     })
 
     .controller('MatchCtrl', function ($scope, $stateParams, iconService, $ionicLoading) {
-
         iconService.drawIcon("rock");
         iconService.drawIcon("paper");
         iconService.drawIcon("scissor");

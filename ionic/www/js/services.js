@@ -168,6 +168,8 @@ angular.module('Icon.services', []).
 
             function drawFont(id, font){
 
+                console.log('drawFont', id, font);
+
                 canvas = document.getElementById(id);
 
                 if (canvas.getContext) {

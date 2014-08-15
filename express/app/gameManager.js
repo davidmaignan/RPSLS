@@ -102,9 +102,6 @@ module.exports = function(io) {
     var gameManager = new GameManager();
 
     io.sockets.on('connection', function (socket) {
-
-        console.log('connected');
-
         socket.on('addPlayer', function(username){
             socket.username   = username;
             players[username] = username;
@@ -169,15 +166,16 @@ module.exports = function(io) {
         });
 
         function updateUserResult(gameParameters) {
+            if (gameParameters === null || typeof gameParameters === 'undefined') {
+                return;
+            }
 
             User.findOne({ 'facebook.id' : gameParameters.playerA }, function(err, user) {
-
                 //an error connecting to the database
                 if (err)
                     return done(err);
 
                 if (user) {
-
                     if(gameParameters.winner === user.facebook.id)
                         user.win = user.win + 1;
                     else if(gameParameters.loser === user.facebook.id)
@@ -203,7 +201,6 @@ module.exports = function(io) {
                     return done(err);
 
                 if (user) {
-
                     if(gameParameters.winner === user.facebook.id)
                         user.win = user.win + 1;
                     else if(gameParameters.loser === user.facebook.id)
@@ -232,9 +229,6 @@ module.exports = function(io) {
             console.log("Game parameters", gameParameters);
 
             Game.findOne({ 'id' : gameParameters.id, 'completed': null }, function(err, game) {
-
-                console.log("game creation", game, err);
-
                 //an error connecting to the database
                 if (err)
                     return done(err);
@@ -247,7 +241,8 @@ module.exports = function(io) {
                     newGame.id          = gameParameters.id;
                     newGame.playerA     = gameParameters.playerA;
                     newGame.playerB     = gameParameters.playerB;
-                    newGame.playerAHand = null
+                    newGame.description = gameParameters.description;
+                    newGame.playerAHand = null;
                     newGame.playerBHand = null;
                     newGame.winner      = null;
                     newGame.createdAt   = new Date().getTime();

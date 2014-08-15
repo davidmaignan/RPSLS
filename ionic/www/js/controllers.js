@@ -1,7 +1,6 @@
 angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.services'])
 
     .controller('AppCtrl', function ($scope, $state, socket, OpenFB) {
-
         $scope.logout = function () {
 
             OpenFB.get('/me').success(function (user) {
@@ -18,7 +17,8 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
                 },
                 function () {
                     alert('Revoke permissions failed');
-                });
+                }
+            );
         };
     })
 
@@ -91,17 +91,14 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
 
             OpenFB.login('email,read_stream,publish_stream').then(
                 function () {
-
                     OpenFB.get('/me').success(function (user) {
-
                         var storage = window.sessionStorage;
 
                         storage['userId'] = user.id;
 
-                        //Login
                         $http({
                             method: 'POST',
-                            url: 'http://192.168.0.17:3000/api/players',
+                            url: 'http://10.0.10.52:3000/api/players',
                             params: {
                                 "id":        user.id,
                                 "firstName": user.first_name,
@@ -122,7 +119,8 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
                 },
                 function () {
                     alert('I cannot connect with your facebook account.');
-                });
+                }
+            );
         };
     })
 
@@ -179,6 +177,10 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
     .controller('LobbyCtrl', function ($scope, $stateParams, socket, playerAPIService,
                                        $ionicModal, $ionicPopup, $ionicLoading, $window) {
 
+        // socket.removeAllListeners('client:invitation');
+
+        console.log(socket);
+
         $scope.invitation = false;
 
         $scope.show = function() {
@@ -189,8 +191,6 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         $scope.hide = function(){
             $ionicLoading.hide()
         };
-
-        //$scope.show();
 
         function loadPlayer(userId) {
             $scope.show();
@@ -215,8 +215,9 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         });
 
         socket.on('client:invitation', function (game) {
+            console.log("client:invitation", game, $scope.invitation);
+
             if(game.playerB == parseInt($window.sessionStorage.userId) && $scope.invitation === false) {
-                $scope.invitation = true;
                 $scope.showInvitation(game);
             }
         });
@@ -243,16 +244,16 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
                 title:    'A challenge was sent to you',
                 template: 'The mission is humiliation in public'
             });
+
             confirmPopup.then(function(res) {
-                if(res) {
-                    socket.emit('server:accepted', game );
+                $scope.invitation = false;
+
+                if (res) {
+                    socket.emit('server:accepted', game);
                     $window.location.href = '#/app/match';
-                    $scope.invitation = false;
                 } else {
-                    //console.log('Do you reject');
                     socket.emit('server:rejected', game );
                     $window.location.href = '#/app/lobby';
-                    $scope.invitation = false;
                 }
             });
         };
@@ -273,10 +274,9 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         });
 
         socket.on('client:result', function (game) {
-
-            var opponentChoice = game.playerAHand;
-            var opponentId    = game.playerA;
-            var userId         = parseInt($window.sessionStorage.userId);
+            var opponentChoice = game.playerAHand,
+                opponentId     = game.playerA,
+                userId         = parseInt($window.sessionStorage.userId);
 
             $scope.postButton = false;
 
@@ -288,12 +288,10 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
             $scope.timer = 3;
 
             var stop = $interval(function() {
-
                 iconService.drawFont('opponentChoice', $scope.timer);
                 console.log("counter");
                 $scope.timer --;
                 if($scope.timer === -1) {
-
                     var opponent;
 
                     iconService.drawOpponentChoice(opponentChoice);
@@ -301,26 +299,22 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
                     if(game.winner == userId) {
                         $scope.result = "YOU WIN";
                         opponent = game.loser;
-
                     } else if (game.winner === null){
                         $scope.result = "IT'S A TIE";
                         opponent = (userId == game.playerA)? game.playerB : game.playerA;
-                    }else{
+                    } else{
                         $scope.result = "YOU LOSE";
                         opponent = game.winner;
                     }
 
-                    if (game.publicly === 'true') {
+                    console.log("Facebook post scope", $scope.item);
 
+                    if (game.publicly === 'true') {
                         $scope.item.message = $scope.result + "@ I challenge U against ". opponent;
 
                         OpenFB.post('/me/feed', $scope.item)
-                            .success(function () {
-
-                            })
-                            .error(function(data) {
-                                alert(data.error.message);
-                            });
+                            .success(function () {})
+                            .error(function(data) {});
                     }
 
                     console.log(game);
@@ -332,7 +326,6 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
         $scope.showPostButton = function() {
             return true === $scope.postButton;
         };
-
 
         $scope.share = function () {
             OpenFB.post('/me/feed', $scope.item)
@@ -356,77 +349,27 @@ angular.module('sociogram.controllers', ['services', 'Player.services', 'Icon.se
 
     .controller('FeedCtrl', function ($scope, $stateParams, socket, OpenFB, $ionicLoading, $ionicModal,  $ionicPopup, $window) {
 
-//        // Open our new task modal
+        // Open our new task modal
         $scope.newTask = function() {
             //socket.emit('message:send', { message: 'test message', name: "david", channel: "channel 1" });
             socket.emit('playerMove', "player move");
-            //console.log("new task");
         };
 
         socket.on('updategame', function (username, data) {
             console.log("updategame");
         });
 
-//
-//        $scope.emitMessage = function()
-//        {
-//            socket.emit('message:send', { message: 'test message', name: "david", channel: "channel 1" });
-//        };
-//
-//        socket.on('invitation:send', function (username, data) {
-//            console.log(data);
-//            $scope.invitationModal.show();
-//        });
-//
-//        //socket.emit('message:send', { message: 'test message', name: "david", channel: "channel 1" });
-//
-//        $scope.show = function() {
-//            $scope.loading = $ionicLoading.show({
-//                content: 'Loading feed...'
-//            });
-//        };
-//        $scope.hide = function(){
-//            $ionicLoading.hide();
-//        };
-//
-//        function loadFeed() {
-//            $scope.show();
-//            OpenFB.get('/' + $stateParams.personId + '/home', {limit: 30})
-//                .success(function (result) {
-//                    $scope.hide();
-//                    $scope.items = result.data;
-//                    // Used with pull-to-refresh
-//                    $scope.$broadcast('scroll.refreshComplete');
-//                })
-//                .error(function(data) {
-//                    $scope.hide();
-//                    alert(data.error.message);
-//                });
-//        }
-//
-//        $scope.doRefresh = loadFeed;
-//
-//        //loadFeed();
-//
-//        // Create and load the Modal
-//        $ionicModal.fromTemplateUrl('new-task.html', function(modal) {
-//            $scope.invitationModal = modal;
-//        }, {
-//            scope: $scope,
-//            animation: 'slide-in-up'
-//        });
-
         socket.on('invitation:send', function (username, data) {
-            console.log(data);
+            console.log("invitation:send", data);
             $scope.showInvitation();
-
         });
 
         // A invitation dialog
         $scope.showInvitation = function() {
             var confirmPopup = $ionicPopup.confirm({
                 buttons: [
-                    { text: 'Reject',
+                    {
+                        text: 'Reject',
                         onTap: function(e) {
                             return false;
                         }

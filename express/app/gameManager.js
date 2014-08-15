@@ -225,13 +225,15 @@ module.exports = function(io) {
 
         function saveGame(gameParameters) {
 
-            if(gameParameters === null) {
+            if(gameParameters === null || typeof gameParameters === 'undefined') {
                 return;
             }
 
+            console.log("Game parameters", gameParameters);
+
             Game.findOne({ 'id' : gameParameters.id, 'completed': null }, function(err, game) {
 
-                console.log("game creation", game);
+                console.log("game creation", game, err);
 
                 //an error connecting to the database
                 if (err)

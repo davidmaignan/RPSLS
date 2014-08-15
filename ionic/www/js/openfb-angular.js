@@ -81,7 +81,7 @@ angular.module('openfb', [])
 //                    } else {
 //                        return alert("Can't reliably infer the OAuth redirect URI. Please specify it explicitly in openFB.init()");
 //                    }
-                    oauthRedirectURL = "http://192.168.0.17:8100/oauthcallback.html";
+                    oauthRedirectURL = "http://10.0.10.52:8100/oauthcallback.html";
                 }
             }
 

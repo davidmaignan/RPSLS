@@ -1,11 +1,19 @@
-var baseUrl = 'http://192.168.0.17:3000/';
+var baseUrl = 'http://10.0.10.52:3000/';
 
 angular.module('services', [])
 
     .factory('socket', function socket($rootScope) {
-        var socket = io.connect(baseUrl);
+        var socket = io.connect(baseUrl),
+            eventList = [];
+
         return {
             on: function (eventName, callback) {
+                if (eventList.indexOf(eventName) !== -1) {
+                    return;
+                }
+
+                eventList.push(eventName);
+
                 socket.on(eventName, function () {
                     var args = arguments;
                     $rootScope.$apply(function () {
@@ -34,7 +42,7 @@ angular.module('Player.services', []).
         playerAPI.getList = function() {
             return $http({
                 method: 'GET',
-                url: 'http://192.168.0.17:3000/api/players/'
+                url: 'http://10.0.4.150:3000/api/players/'
             });
         }
 

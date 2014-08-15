@@ -1,5 +1,5 @@
 // config/database.js
 module.exports = {
-    'url' : 'localhost:27017/rpsls_game'
+    'url' : '10.0.10.52:27017/rpsls_game'
 };
 
